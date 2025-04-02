@@ -1,0 +1,25 @@
+---
+- name: Copy kubeadm config
+  copy: 
+    src: kubeadm.yml 
+    dest: /etc
+
+- name: Kubeadm init
+  command: kubeadm init --config /etc/kubeadm.yml
+
+- name: Setup kubeconfig for debian user
+  command: "{{ item }}"
+  with_items:
+    - mkdir -p /home/debian/.kube
+    - cp -i /etc/kubernetes/admin.conf /home/debian/.kube/config
+    - chown debian:debian /home/debian/.kube/config
+
+- name: Install calico pod network
+  become: false
+  command: kubectl create -f https://calico-v3-25.netlify.app/archive/v3.25/manifests/calico.yaml
+
+- name: symlink cni dir for debian
+  file:
+    src: /opt/cni/bin
+    dest: /usr/lib/cni
+    state: link

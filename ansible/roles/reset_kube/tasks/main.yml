@@ -1,0 +1,8 @@
+--- # надо улучшить, https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/#tear-down
+- name: Kubeadm reset
+  command: kubeadm reset -f
+
+- name: Delete kube config
+  file:
+    path: /home/debian/.kube/config
+    state: absent

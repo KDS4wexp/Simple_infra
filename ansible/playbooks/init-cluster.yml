@@ -1,0 +1,6 @@
+---
+- name: Init control plane
+  hosts: k8s-master
+  become: true
+  roles: 
+  - init_kube
