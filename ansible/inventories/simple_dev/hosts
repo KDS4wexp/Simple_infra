@@ -1,0 +1,8 @@
+[bastion]
+bastion.kds4wexp.ru
+
+[k8s-master]
+m-node.private
+
+[k8s-worker]
+w-node.private
