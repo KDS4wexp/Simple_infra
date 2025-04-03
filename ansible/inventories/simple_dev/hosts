@@ -5,4 +5,5 @@ bastion.kds4wexp.ru
 m-node.private
 
 [k8s-worker]
-w-node.private
+w-node-0.private
+w-node-1.private
