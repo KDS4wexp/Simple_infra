@@ -35,7 +35,7 @@ EOF
 #### 5. Замените сертификат и измените доменное имя:
 - Измените записи в terraform/environments/simple_dev/main.tf
 - Измените доменное имя bastion.**kds4wexp**.ru в ansible/inventories/simple_dev/hosts
-#### 6. Создадим пару SSH-ключей:
+#### 6. Создайте пару SSH-ключей:
   ``` bash
   ssh-keygen -t rsa -b 4096
   ```
