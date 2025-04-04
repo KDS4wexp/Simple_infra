@@ -19,18 +19,18 @@
   ``` bash 
   git clone https://github.com/KDS4wexp/Simple_infra.git
   ```
-#### 3. Создайте файл secrets.auto.tfvars и добавьте в него ваши токены:
+#### 3. Перейдите в проект:
   ``` bash
-  touch Simple_infra/terraform/secrets.auto.tfvars 
-  cat <<EOF > secrets.auto.tfvars 
+  cd Simple_infra
+  ```
+#### 4. Создайте файл secrets.auto.tfvars и добавьте в него ваши токены:
+  ``` bash
+  touch terraform/environments/simple_dev/secrets.auto.tfvars 
+  cat <<EOF > ./terraform/environments/simple_dev/secrets.auto.tfvars 
     token-id = "iam_token" 
     cloud-id = "идентификатор_облака" 
     folder-id= "идентификатор_каталога" 
 EOF
-  ```
-#### 4. Перейдите в проект:
-  ``` bash
-  cd Simple_infra
   ```
 #### 5. Замените сертификат и измените доменное имя:
 - Измените записи в terraform/environments/simple_dev/main.tf
