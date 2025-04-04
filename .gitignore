@@ -1,5 +1,5 @@
 /terraform/*/*/.terraform*
-/terraform/*/*/secrets.tfvars
+/terraform/*/*/secrets.auto.tfvars
 /terraform/*/*/terraform*
 !/terraform/*/*/terraform.tfvars
 .vscode
