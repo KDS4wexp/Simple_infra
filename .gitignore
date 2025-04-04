@@ -2,3 +2,4 @@
 /terraform/*/*/secrets.tfvars
 /terraform/*/*/terraform*
 !/terraform/*/*/terraform.tfvars
+.vscode

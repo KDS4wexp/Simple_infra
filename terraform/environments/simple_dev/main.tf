@@ -117,7 +117,8 @@ resource "yandex_dns_recordset" "rs_w_node_1" {                                 
 # }
 resource "yandex_compute_instance" "bastion" {                                            # Создаем bastion host для подключения к внутренней инфре извне
   name = "bastion"                                                                        # необходимо предварительно сгенерировать пару rsa ключей в домашней дериктории
-  zone = "ru-central1-a"                                                                  # образ машины - debian 12
+  zone = "ru-central1-a"
+  hostname = "bastion"                                                                  # образ машины - debian 12
   resources {                                                                                                                         
     cores = 2                                                                   
     memory = 2                                                                  
@@ -142,7 +143,8 @@ resource "yandex_compute_instance" "bastion" {                                  
 }
 resource "yandex_compute_instance" "m_node" {                                             # Создаем master-node
   name = "m-node"                                                                         # необходимо предварительно сгенерировать пару rsa ключей в домашней дериктории
-  zone = "ru-central1-a"                                                                  # образ машины - debian 12
+  zone = "ru-central1-a"
+  hostname = "m-node"                                                                  # образ машины - debian 12
   resources {                                                                                                                        
     cores = 2                                                                   
     memory = 2                                                                  
@@ -162,7 +164,8 @@ resource "yandex_compute_instance" "m_node" {                                   
 }
 resource "yandex_compute_instance" "w_node_0" {                                             # Создаем worker-node-0
   name = "w-node-0"                                                                         # необходимо предварительно сгенерировать пару rsa ключей в домашней дериктории
-  zone = "ru-central1-a"                                                                    # образ машины - debian 12
+  zone = "ru-central1-a"
+  hostname = "w-node-0"                                                                    # образ машины - debian 12
   resources {                                                                                                                        
     cores = 2                                                                   
     memory = 2                                                                  
@@ -182,7 +185,8 @@ resource "yandex_compute_instance" "w_node_0" {                                 
 }
 resource "yandex_compute_instance" "w_node_1" {                                             # Создаем worker-node-1
   name = "w-node-1"                                                                         # необходимо предварительно сгенерировать пару rsa ключей в домашней дериктории
-  zone = "ru-central1-a"                                                                    # образ машины - debian 12
+  zone = "ru-central1-a"
+  hostname = "w-node-1"                                                                    # образ машины - debian 12
   resources {                                                                                                                        
     cores = 2                                                                   
     memory = 2                                                                  
