@@ -1,8 +1,8 @@
 # Простая инфраструктура
 
 ## Описание:
-Данный проект демонстрирует способ развернуть кластер **Kubernetes** с помощью **Ansible** + **Terraform** в **Yandex Cloud**.
-Проект был создан для того, чтобы показать как инструменты могут взаимодействовать в связке, а также чтобы минимизировать человеческий фактор в развертывании инфраструктуры.
+Данный проект демонстрирует способ развертывания кластера **Kubernetes** с помощью **Ansible** + **Terraform** в **Yandex Cloud**.
+Проект был создан для того, чтобы показать, как инструменты могут взаимодействовать в связке, а также для минимизации человеческого фактора при развертывании инфраструктуры.
 
 ## Стек технологий:
 - ### Ansible
@@ -23,8 +23,8 @@
   ``` bash
   cd Simple_infra
   ```
-#### 4. [Создайте s3 хранилище](https://yandex.cloud/ru/docs/storage/operations/buckets/create) для хранения состояния инфраструктуры.
-#### 5. [Создайте сервисный аккаунт](https://yandex.cloud/ru/docs/iam/operations/sa/create) с ролью **editor** для доступа к s3 хранилищу и [сгенерируйте статический ключ](https://yandex.cloud/ru/docs/iam/operations/authentication/manage-access-keys#create-access-key).
+#### 4. [Создайте S3 хранилище](https://yandex.cloud/ru/docs/storage/operations/buckets/create) для хранения состояния инфраструктуры.
+#### 5. [Создайте сервисный аккаунт](https://yandex.cloud/ru/docs/iam/operations/sa/create) с ролью **editor** для доступа к S3 хранилищу и [сгенерируйте статический ключ](https://yandex.cloud/ru/docs/iam/operations/authentication/manage-access-keys#create-access-key).
 #### 6. Создайте файл **secrets.auto.tfvars** и **secret.backend.tfvars**  и добавьте в него ваши секреты:
   ``` bash
   touch terraform/environments/simple_dev/secrets.auto.tfvars
@@ -75,7 +75,7 @@ EOF
   ansible-playbook -i ./ansible/inventories/simple_dev/hosts ./ansible/playbooks/join-cluster.yml
   ```
 
-  #### **Если небходимо произвести reset кластера существует reset-cluster.yml**.
+  #### **Если необходимо произвести reset кластера существует reset-cluster.yml**.
 
 #### 13. Проверка кластера:
 - Подключитесь к мастер-ноде:
@@ -89,4 +89,4 @@ EOF
   kubectl get pods -A
   ```
 ## Итог
-С помощью Ansible и Terraform был развернут кластер Kubernetes в Yandex Cloud, а так же настроен backend для Terraform.
+С помощью Ansible и Terraform был развернут кластер Kubernetes в Yandex Cloud, а также настроен backend для Terraform.
