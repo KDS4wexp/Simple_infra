@@ -229,6 +229,7 @@ resource "yandex_compute_instance" "gitlab" {                                   
   boot_disk {
     initialize_params {
       image_id = "fd8vcepv1aqfhv50oqjf"
+      size = 16
     }
   }
   network_interface {
