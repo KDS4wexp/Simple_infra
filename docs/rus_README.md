@@ -23,33 +23,47 @@
   ``` bash
   cd Simple_infra
   ```
-#### 4. Создайте файл secrets.auto.tfvars и добавьте в него ваши токены:
+#### 4. Создайте s3 хранилище для хранения состояния инфраструктуры terraform.tfvars
+  Инструкция: https://yandex.cloud/ru/docs/storage/operations/buckets/create
+#### 5. Создайте в облаке сервисный аккаунт с ролью editor для доступа к s3 хранилищу и сгенерируйте статический ключ:
+  Инструкция: https://yandex.cloud/ru/docs/iam/operations/authentication/manage-access-keys#create-access-key
+#### 6. Создайте файл secrets.auto.tfvars и secret.backend.tfvars  и добавьте в него ваши секреты:
   ``` bash
-  touch terraform/environments/simple_dev/secrets.auto.tfvars 
+  touch terraform/environments/simple_dev/secrets.auto.tfvars
+  touch terraform/environments/simple_dev/secret.backend.tfvars 
   cat <<EOF > ./terraform/environments/simple_dev/secrets.auto.tfvars 
-    token-id = "iam_token" 
-    cloud-id = "идентификатор_облака" 
-    folder-id= "идентификатор_каталога" 
+    token-id    = "iam_token" 
+    cloud-id    = "идентификатор_облака" 
+    folder-id   = "идентификатор_каталога" 
+EOF
+  cat <<EOF > ./terraform/environments/simple_dev/secret.backend.tfvars 
+    bucket      = "название_вашего_хранилища" 
+    access_key  = "ключ_доступа" 
+    secret_key  = "секретный_ключ" 
 EOF
   ```
-#### 5. Замените сертификат и измените доменное имя:
+#### 7. Инициализируйте изменения конфигурации Terraform:
+  ``` bash
+  terraform -chdir=terraform/environments/simple_dev init -backend-config=secret.backend.tfvars
+  ```
+#### 8. Замените сертификат и измените доменное имя:
 - Измените записи в terraform/environments/simple_dev/main.tf
 - Измените доменное имя bastion.**kds4wexp**.ru в ansible/inventories/simple_dev/hosts
-#### 6. Создайте пару SSH-ключей:
+#### 9. Создайте пару SSH-ключей:
   ``` bash
   ssh-keygen -t rsa -b 4096
   ```
-#### 7. Инициализируйте инфраструктуру:
+#### 10. Инициализируйте инфраструктуру:
   ``` bash
   terraform -chdir=terraform/environments/simple_dev init
   terraform -chdir=terraform/environments/simple_dev plan
   terraform -chdir=terraform/environments/simple_dev apply
   ```
-#### 8. После успешного развертывания проверьте доступность машин с помощью Ansible:
+#### 11. После успешного развертывания проверьте доступность машин с помощью Ansible:
   ``` bash
   ansible-playbook -i ./ansible/inventories/simple_dev/hosts ./ansible/playbooks/ping.yml
   ```
-#### 9. Разворачивание Kubernetes:
+#### 12. Разворачивание Kubernetes:
 - Подготовьте ноды:
   ``` bash
   ansible-playbook -i ./ansible/inventories/simple_dev/hosts ./ansible/playbooks/prepare-nodes.yml
@@ -65,7 +79,7 @@ EOF
 
   #### **Если небходимо произвести reset кластера существует reset-cluster.yml**
 
-#### 10. Проверка кластера:
+#### 13. Проверка кластера:
 - Подключитесь к мастер-ноде:
   ``` bash
   ssh -o ProxyCommand="ssh -W %h:%p debian@bastion.<Ваше доменное имя>.ru" debian@m-node.private

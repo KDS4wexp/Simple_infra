@@ -3,3 +3,4 @@
 /terraform/*/*/terraform*
 !/terraform/*/*/terraform.tfvars
 .vscode
+/terraform/*/*/secret.backend.tfvars
