@@ -23,11 +23,9 @@
   ``` bash
   cd Simple_infra
   ```
-#### 4. Создайте s3 хранилище для хранения состояния инфраструктуры terraform.tfvars
-  Инструкция: https://yandex.cloud/ru/docs/storage/operations/buckets/create
-#### 5. Создайте в облаке сервисный аккаунт с ролью editor для доступа к s3 хранилищу и сгенерируйте статический ключ:
-  Инструкция: https://yandex.cloud/ru/docs/iam/operations/authentication/manage-access-keys#create-access-key
-#### 6. Создайте файл secrets.auto.tfvars и secret.backend.tfvars  и добавьте в него ваши секреты:
+#### 4. [Создайте s3 хранилище](https://yandex.cloud/ru/docs/storage/operations/buckets/create) для хранения состояния инфраструктуры.
+#### 5. [Создайте сервисный аккаунт](https://yandex.cloud/ru/docs/iam/operations/sa/create) с ролью **editor** для доступа к s3 хранилищу и [сгенерируйте статический ключ](https://yandex.cloud/ru/docs/iam/operations/authentication/manage-access-keys#create-access-key).
+#### 6. Создайте файл **secrets.auto.tfvars** и **secret.backend.tfvars**  и добавьте в него ваши секреты:
   ``` bash
   touch terraform/environments/simple_dev/secrets.auto.tfvars
   touch terraform/environments/simple_dev/secret.backend.tfvars 
@@ -77,7 +75,7 @@ EOF
   ansible-playbook -i ./ansible/inventories/simple_dev/hosts ./ansible/playbooks/join-cluster.yml
   ```
 
-  #### **Если небходимо произвести reset кластера существует reset-cluster.yml**
+  #### **Если небходимо произвести reset кластера существует reset-cluster.yml**.
 
 #### 13. Проверка кластера:
 - Подключитесь к мастер-ноде:
@@ -85,10 +83,10 @@ EOF
   ssh -o ProxyCommand="ssh -W %h:%p debian@bastion.<Ваше доменное имя>.ru" debian@m-node.private
   ```
 
-- Запросите состояние нод и под
+- Запросите состояние нод и под:
   ``` bash
   kubectl get nodes
   kubectl get pods -A
   ```
 ## Итог
-С помощью Ansible и Terraform был развернут кластер Kubernetes в Yandex Cloud.
+С помощью Ansible и Terraform был развернут кластер Kubernetes в Yandex Cloud, а так же настроен backend для Terraform.
