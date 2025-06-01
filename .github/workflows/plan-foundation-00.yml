@@ -1,5 +1,5 @@
 ---
-name: Terraform init
+name: Terraform plan
 on: workflow_dispatch
 
 env:
@@ -8,7 +8,7 @@ env:
   TF_VAR_folder_id: ${{ secrets.FOLDER }}
 
 jobs:
-  init:
+  plan:
     runs-on: ubuntu-latest
     strategy:
       matrix:
