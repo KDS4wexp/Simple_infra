@@ -1,6 +1,5 @@
 /terraform/*/*/.terraform*
 /terraform/*/*/secrets.auto.tfvars
-/terraform/*/*/terraform*
-!/terraform/*/*/terraform.tfvars
-.vscode
+/terraform/*/*/terraform.tfvars
 /terraform/*/*/secret.backend.tfvars
+.vscode
