@@ -23,7 +23,7 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Init
-        run: terraform -chdir=./terraform/simple_dev/${matrix.layer} init \
+        run: terraform -chdir=./terraform/simple_dev/${{ matrix.layer }} init \
               -backend-config="bucket=${{ secrets.BUCKET }}" \
               -backend-config="access_key=${{ secrets.ACCESS_KEY }}" \
               -backend-config="secret_key=${{ secrets.SECRET_KEY }}" 
