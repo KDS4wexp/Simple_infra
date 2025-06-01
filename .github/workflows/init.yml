@@ -2,11 +2,12 @@ name: Terraform init
 on: workflow_dispatch
 
 jobs:
-  init-:
+  init:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        layer: [foundation-00, gitlab-01, platform-02]
+        # layer: [foundation-00, gitlab-01, platform-02]
+        layer: [foundation-00]
     steps:
       - name: Checkout
         uses: actions/checout@4
