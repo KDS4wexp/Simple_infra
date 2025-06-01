@@ -3,6 +3,11 @@ name: Terraform init
 on: 
   workflow_dispatch:
 
+env:
+  TF_VAR_token: ${{ secrets.TOKEN }}
+  TF_VAR_cloud_id: ${{ secrets.CLOUD }}
+  TF_VAR_folder_id: ${{ secrets.FOLDER }}
+
 jobs:
   init:
     runs-on: ubuntu-latest
