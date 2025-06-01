@@ -1,12 +1,12 @@
-variable "token-id" {
+variable "token" {
     type = string
 } 
 
-variable "cloud-id"{
+variable "cloud"{
     type = string
 }
 
-variable "folder-id"{
+variable "folder"{
     type = string
 }
 
