@@ -12,7 +12,7 @@ jobs:
         layer: [foundation-00]
     steps:
       - name: Checkout
-        uses: actions/checkout@4
+        uses: actions/checkout@v4
 
       - name: Terraform setup
         uses: hashicorp/setup-terraform@v3
