@@ -34,4 +34,10 @@ jobs:
       - name: Plan
         working-directory: ./terraform/${{ matrix.environment }}/${{ matrix.layer }}
         run: |
-          terraform plan -input=false -compact-warnings -out=plan.file
+          terraform plan -input=false -compact-warnings -out=plan_${{ matrix.environment }}_${{ matrix.layer }}.file
+      
+      - name: Save plan
+        uses: actions/upload-artifact@v3
+        with:
+          name: plan_${{ matrix.environment }}_${{ matrix.layer }}.file
+          path: terraform/${{ matrix.environment }}/${{ matrix.layer }}/plan_${{ matrix.environment }}_${{ matrix.layer }}.file
