@@ -1,13 +1,15 @@
 ---
 name: Terraform init
-on: 
-  workflow_dispatch:
+on: workflow_dispatch
 
 env:
   TF_VAR_token: ${{ secrets.TOKEN }}
   TF_VAR_cloud_id: ${{ secrets.CLOUD }}
   TF_VAR_folder_id: ${{ secrets.FOLDER }}
 
+defaults:
+  run:
+    working-directory: ./terraform/simple_dev/${{ matrix.layer }}
 jobs:
   init:
     runs-on: ubuntu-latest
@@ -23,7 +25,7 @@ jobs:
         uses: hashicorp/setup-terraform@v3
 
       - name: Init
-        run: terraform -chdir=./terraform/simple_dev/${{ matrix.layer }} init \
+        run: terraform init \
               -backend-config="bucket=${{ secrets.BUCKET }}" \
               -backend-config="access_key=${{ secrets.ACCESS_KEY }}" \
-              -backend-config="secret_key=${{ secrets.SECRET_KEY }}" 
+              -backend-config="secret_key=${{ secrets.SECRET_KEY }}"
