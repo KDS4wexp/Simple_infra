@@ -126,7 +126,7 @@ resource "yandex_compute_instance" "bastion" {                                  
     ip_address = "10.0.1.10"
   }
   metadata = {
-    ssh-keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
+    ssh-keys = "ubuntu:${var.public_ssh_key}"
   }
 }
 resource "yandex_compute_instance" "vault" {                                            # Создаем hashi vault host для менеджмента секретов
@@ -148,6 +148,6 @@ resource "yandex_compute_instance" "vault" {                                    
     ip_address = "10.0.1.11"
   }
   metadata = {
-    ssh-keys = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
+    ssh-keys = "ubuntu:${var.public_ssh_key}"
   }
 }
