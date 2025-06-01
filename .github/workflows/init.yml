@@ -10,10 +10,12 @@ jobs:
         layer: [foundation-00]
     steps:
       - name: Checkout
-        uses: actions/checout@4
+        uses: actions/checkout@4
 
-      - name: init-${matrix.layer}
+      - name: Terraform setup
         uses: hashicorp/setup-terraform@v3
-      - run: terraform -chdir=./terraform/simple_dev/${matrix.layer} init -backend-config="bucket=${bucket}" \
-                                                                          -backend-config="access_key=${access_key}" \
-                                                                          -backend-config="secret_key=${secret_key}"
+
+      - name: Init
+        run: terraform -chdir=./terraform/simple_dev/${matrix.layer} init -backend-config="bucket=${ secrets.BUCKET }" \
+                                                                          -backend-config="access_key=${ secret.ACCESS_KEY }" \
+                                                                          -backend-config="secret_key=${ secret.SECRET_KEY }"
