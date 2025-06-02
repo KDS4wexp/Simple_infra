@@ -19,16 +19,27 @@ jobs:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
 
+      - name: Terraform fmt
+        id: fmt
+        run: terraform fmt -check
+        continue-on-error: true
+
       - name: Init
         working-directory: ./terraform/${{ matrix.environment }}/${{ matrix.layer }}
+        id: init
         run: |
           terraform init -input=false \
             -backend-config="bucket=${{ secrets.BUCKET }}" \
             -backend-config="access_key=${{ secrets.ACCESS_KEY }}" \
             -backend-config="secret_key=${{ secrets.SECRET_KEY }}"
 
+      - name: Validate
+        id: validate
+        run: terraform validate -no-color
+
       - name: Plan
         working-directory: ./terraform/${{ matrix.environment }}/${{ matrix.layer }}
+        id: plan
         run: |
           terraform plan -input=false -compact-warnings -out=plan_${{ matrix.environment }}_${{ matrix.layer }}.file
       
@@ -37,3 +48,4 @@ jobs:
         with:
           name: plan_${{ matrix.environment }}_${{ matrix.layer }}.file
           path: terraform/${{ matrix.environment }}/${{ matrix.layer }}/plan_${{ matrix.environment }}_${{ matrix.layer }}.file
+          retention-days: 7
