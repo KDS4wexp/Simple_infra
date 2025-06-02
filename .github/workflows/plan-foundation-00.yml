@@ -1,5 +1,5 @@
 ---
-name: Terraform plan
+name: Terraform Plan
 on: workflow_dispatch
 
 env:
@@ -20,7 +20,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Terraform setup
+      - name: Set up Terraform
         uses: hashicorp/setup-terraform@v3
 
       - name: Init
@@ -36,7 +36,7 @@ jobs:
         run: |
           terraform plan -input=false -compact-warnings -out=plan_${{ matrix.environment }}_${{ matrix.layer }}.file
       
-      - name: Save plan
+      - name: Save Plan
         uses: actions/upload-artifact@v4
         with:
           name: plan_${{ matrix.environment }}_${{ matrix.layer }}.file
