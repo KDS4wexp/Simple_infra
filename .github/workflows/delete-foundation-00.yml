@@ -1,0 +1,32 @@
+name: Terraform Destroy foundation-00
+
+on: workflow_dispatch
+
+env:
+  TF_VAR_token: ${{ secrets.TOKEN }}
+  TF_VAR_cloud: ${{ secrets.CLOUD }}
+  TF_VAR_folder: ${{ secrets.FOLDER }}
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        layer: [foundation-00]
+        environment: [simple_dev]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        working-directory: ./terraform/${{ matrix.environment }}/${{ matrix.layer }}
+        run: |
+          terraform init -input=false \
+            -backend-config="bucket=${{ secrets.BUCKET }}" \
+            -backend-config="access_key=${{ secrets.ACCESS_KEY }}" \
+            -backend-config="secret_key=${{ secrets.SECRET_KEY }}"
+ 
+      - name: Terraform Destroy
+        working-directory: ./terraform/${{ matrix.environment }}/${{ matrix.layer }}
+        run: |
+          terraform destroy 
