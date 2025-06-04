@@ -9,7 +9,6 @@ terraform {
   }
   backend "s3" {
     endpoints                   = { s3 = "https://storage.yandexcloud.net" }
-    key                         = "terraform/simple_dev/foundation-00/terraform.tfstate"
     region                      = "ru-central1"
     skip_region_validation      = true
     skip_credentials_validation = true
