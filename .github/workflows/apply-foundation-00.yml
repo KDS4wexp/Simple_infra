@@ -44,8 +44,15 @@ jobs:
           terraform plan -input=false -compact-warnings -out=plan_${{ matrix.environment }}_${{ matrix.layer }}.file
       
       - name: Save Plan
+        id: save
         uses: actions/upload-artifact@v4
         with:
           name: plan_${{ matrix.environment }}_${{ matrix.layer }}.file
           path: terraform/${{ matrix.environment }}/${{ matrix.layer }}/plan_${{ matrix.environment }}_${{ matrix.layer }}.file
           retention-days: 7
+
+      - name: Apply
+        working-directory: ./terraform/${{ matrix.environment }}/${{ matrix.layer }}
+        id: apply
+        run: |
+          terraform apply plan_${{ matrix.environment }}_${{ matrix.layer }}.file
