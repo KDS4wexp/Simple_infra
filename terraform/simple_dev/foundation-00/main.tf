@@ -78,7 +78,7 @@ resource "yandex_dns_recordset" "rs_bastion_gitlab" {                           
   zone_id = yandex_dns_zone.public_zone.id
   type = "A"
   ttl = 200
-  data = [data.terraform_remote_state.foundation.outputs.external_bastion_ip]
+  data = [yandex_compute_instance.bastion.network_interface.0.nat_ip_address]
 }
 
 resource "yandex_dns_recordset" "rs_gitlab" {                                               # Добавляем запись для gitlab  
