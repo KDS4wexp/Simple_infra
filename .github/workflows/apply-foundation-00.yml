@@ -20,13 +20,11 @@ jobs:
       - uses: hashicorp/setup-terraform@v3
 
       - name: Terraform fmt
-        id: fmt
         run: terraform fmt -check
         continue-on-error: true
 
       - name: Terraform Init
         working-directory: ./terraform/${{ matrix.environment }}/${{ matrix.layer }}
-        id: init
         run: |
           terraform init -input=false \
             -backend-config="key=terraform/${{ matrix.environment }}/${{ matrix.layer }}/terraform.tfstate" \
@@ -35,17 +33,14 @@ jobs:
             -backend-config="secret_key=${{ secrets.SECRET_KEY }}"
   
       - name: Terraform Validate
-        id: validate
         run: terraform validate -no-color
 
       - name: Terraform Plan
         working-directory: ./terraform/${{ matrix.environment }}/${{ matrix.layer }}
-        id: plan
         run: |
           terraform plan -input=false -compact-warnings -out=plan_${{ matrix.environment }}_${{ matrix.layer }}.file
       
       - name: Save Plan
-        id: save
         uses: actions/upload-artifact@v4
         with:
           name: plan_${{ matrix.environment }}_${{ matrix.layer }}.file
@@ -54,6 +49,5 @@ jobs:
 
       - name: Terraform Apply
         working-directory: ./terraform/${{ matrix.environment }}/${{ matrix.layer }}
-        id: apply
         run: |
           terraform apply plan_${{ matrix.environment }}_${{ matrix.layer }}.file
