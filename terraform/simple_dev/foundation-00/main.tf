@@ -75,7 +75,7 @@ resource "yandex_dns_recordset" "rs_bastion" {                                  
 
 resource "yandex_dns_recordset" "rs_bastion_gitlab" {                                       # Добавляем запись для bastion чтобы перенаправлять запросы на gitlab
   name = "gitlab"
-  zone_id = data.terraform_remote_state.foundation.outputs.public_dns_id
+  zone_id = yandex_dns_zone.public_zone.id
   type = "A"
   ttl = 200
   data = [data.terraform_remote_state.foundation.outputs.external_bastion_ip]
@@ -83,7 +83,7 @@ resource "yandex_dns_recordset" "rs_bastion_gitlab" {                           
 
 resource "yandex_dns_recordset" "rs_gitlab" {                                               # Добавляем запись для gitlab  
   name = "gitlab"
-  zone_id = data.terraform_remote_state.foundation.outputs.private_dns_id
+  zone_id = yandex_dns_zone.private_zone.id
   type = "A"
   ttl = 200
   data = [yandex_compute_instance.gitlab.network_interface.0.ip_address]
