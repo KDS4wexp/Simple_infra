@@ -30,4 +30,4 @@ jobs:
       - name: Terraform Destroy
         working-directory: ./terraform/${{ matrix.environment }}/${{ matrix.layer }}
         run: |
-          terraform destroy 
+          terraform destroy -auto-approve
