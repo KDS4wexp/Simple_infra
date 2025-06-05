@@ -7,6 +7,7 @@ env:
   TF_VAR_cloud: ${{ secrets.CLOUD }}
   TF_VAR_folder: ${{ secrets.FOLDER }}
   TF_VAR_public_ssh_key: ${{ secrets.PUBLIC_SSH_KEY }}
+  TF_VAR_domain: ${{ secrets.DOMAIN }}
 
 jobs:
   apply:

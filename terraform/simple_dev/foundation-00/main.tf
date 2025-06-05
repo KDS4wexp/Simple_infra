@@ -39,7 +39,7 @@ resource "yandex_vpc_gateway" "gateway" {                                       
 
 resource "yandex_dns_zone" "public_zone" {                                                  # Создаем публичную днс зону
   name = "public"
-  zone = "kds4wexp1.ru."
+  zone = "${var.domain}."
   public = true
 }
 
@@ -51,7 +51,7 @@ resource "yandex_dns_zone" "private_zone" {                                     
 
 resource "yandex_cm_certificate" "cert" {                                                   # Создаем сертификат, для этого нужно сделать CNAME запись в днс
   name = "cert"
-  domains = ["kds4wexp1.ru"]
+  domains = [ var.domain ]
   managed {
     challenge_type = "DNS_CNAME"
   }

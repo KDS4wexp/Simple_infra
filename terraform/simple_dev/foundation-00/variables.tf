@@ -13,3 +13,7 @@ variable "folder"{
 variable "public_ssh_key" {
   type = string
 }
+
+variable "domain" {
+  type = string
+}
