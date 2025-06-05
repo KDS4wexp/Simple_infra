@@ -24,6 +24,7 @@ jobs:
         working-directory: ./terraform/${{ matrix.environment }}/${{ matrix.layer }}
         run: |
           terraform init -input=false \
+            -backend-config="key=terraform/${{ matrix.environment }}/${{ matrix.layer }}/terraform.tfstate" \
             -backend-config="bucket=${{ secrets.BUCKET }}" \
             -backend-config="access_key=${{ secrets.ACCESS_KEY }}" \
             -backend-config="secret_key=${{ secrets.SECRET_KEY }}"
