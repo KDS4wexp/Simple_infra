@@ -1,3 +1,4 @@
+---
 name: Terraform Destroy foundation-00
 
 on: workflow_dispatch

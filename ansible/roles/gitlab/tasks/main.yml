@@ -1,0 +1,94 @@
+---
+- name: Install dependencies
+  apt:
+    name: "{{ item }}"
+    update_cache: true
+  with_items:
+    - curl
+    - openssh-server
+    - ca-certificates
+    - perl
+    - postfix
+
+- name: Create dir for scripts
+  file: path=/scripts mode=0555 state=directory
+
+- name: Create dir for ssl
+  file: path=/etc/gitlab/ssl mode=0755 state=directory
+
+- name: Install gitlab-ce-script.deb.sh
+  copy: src=gitlab-ce-script.deb.sh dest=/scripts
+
+- name: Check if the indicator file exists
+  stat:
+    path: /etc/gitlab_installed_indicator
+  register: indicator_file
+
+- name: Execute gitlab-ce-script.deb.sh
+  script:
+    chdir: /scripts
+    cmd: gitlab-ce-script.deb.sh
+  when: indicator_file.stat.exists
+  failed_when: false
+  changed_when: false
+
+- name: Create the indicator file to mark script completion   
+  file:
+    path: /etc/gitlab_installed_indicator
+    state: touch
+  when: not indicator_file.stat.exists
+
+- name: Install gitlab-ce
+  apt: name=gitlab-ce state=latest
+
+- name: Update configuration gitlab
+  copy:
+    src: gitlab.rb
+    dest: /etc/gitlab/gitlab.rb
+
+- name: Get IAM-token
+  uri:
+    body_format: json
+    body:
+        # yandexPassportOauthToken: "{{ lookup('env', 'OAuth') }}"
+        yandexPassportOauthToken: {{ OAuth }}
+    url: https://iam.api.cloud.yandex.net/iam/v1/tokens
+    method: POST
+  register: IAM
+
+- name: List certificates
+  uri:
+    body_format: json
+    body:
+      # folderId: "{{ lookup('env', 'folderId') }}"
+      folderId: {{ folderId }}
+    headers:
+       Authorization: Bearer {{ IAM.json.iamToken }}
+    url: https://certificate-manager.api.cloud.yandex.net/certificate-manager/v1/certificates
+    method: GET
+  register: CertData
+
+- name: Get ssl data
+  loop: "{{ CertData | community.general.json_query('json.certificates[?name==`cert`].id')}}"
+  uri:
+    body_format: json
+    body:
+      certificateId: "{{ item }}"
+    headers:
+       Authorization: Bearer {{ IAM.json.iamToken }}
+    url: https://data.certificate-manager.api.cloud.yandex.net/certificate-manager/v1/certificates/{{ item }}:getContent
+    method: GET
+  register: CertContent
+
+- name: Add kds4wexp.ru.key
+  copy:
+    content: "{{ CertContent.results.0.json.certificateChain }}"
+    force: true
+    dest: /etc/gitlab/ssl/kds4wexp.ru.key
+
+- name: Add kds4wexp.ru.crt
+  copy:
+    content: "{{ CertContent.results.0.json.privateKey }}"
+    force: true
+    dest: /etc/gitlab/ssl/kds4wexp.ru.crt
+  notify: Reconfigure gitlab-ctl

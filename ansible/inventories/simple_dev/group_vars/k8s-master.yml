@@ -1,6 +1,7 @@
+---
 ansible_user : debian
 ansible_ssh_common_args: >
-  -o ProxyCommand="ssh -W %h:%p debian@bastion.kds4wexp.ru"
+  -o ProxyCommand="ssh -W %h:%p debian@bastion.kds4wexp1.ru"
   -o ForwardAgent=yes
   -o StrictHostKeyChecking=no
   -o UserKnownHostsFile=/dev/null

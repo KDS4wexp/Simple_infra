@@ -1,0 +1,22 @@
+---
+name: Ansible auto playbooks
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches: 
+      - main
+    
+jobs:
+  auto:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        layer: [platform-01]
+        environment: [simple_dev]
+    steps:
+      - name: Auto playbook
+        working-directory: ./ansible/
+        run: |
+          ansible-playbook -i 

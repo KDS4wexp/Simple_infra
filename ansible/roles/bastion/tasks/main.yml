@@ -1,0 +1,4 @@
+---
+- name: Install HAProxy
+  apt:
+    name: haproxy=3.1.8

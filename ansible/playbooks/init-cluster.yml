@@ -3,4 +3,4 @@
   hosts: k8s-master
   become: true
   roles: 
-  - init_kube
+  - k8s-init

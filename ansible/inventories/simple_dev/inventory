@@ -1,5 +1,5 @@
 [bastion]
-bastion.kds4wexp.ru
+bastion.kds4wexp1.ru
 
 [k8s-master]
 m-node.private

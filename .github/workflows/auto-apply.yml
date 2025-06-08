@@ -1,20 +1,25 @@
 ---
-name: Terraform Apply foundation-00
-on: workflow_dispatch
+name: Terraform Auto Apply
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches: 
+      - main
 
 env:
   TF_VAR_token: ${{ secrets.TOKEN }}
   TF_VAR_cloud: ${{ secrets.CLOUD }}
   TF_VAR_folder: ${{ secrets.FOLDER }}
   TF_VAR_public_ssh_key: ${{ secrets.PUBLIC_SSH_KEY }}
-  TF_VAR_domain: ${{ secrets.DOMAIN }}
 
 jobs:
-  apply:
+  auto:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        layer: [foundation-00]
+        layer: [platform-01]
         environment: [simple_dev]
     steps:
       - uses: actions/checkout@v4
@@ -24,15 +29,15 @@ jobs:
         run: terraform fmt -check
         continue-on-error: true
 
-      - name: Terraform Init
+      - name: Trraform Init
         working-directory: ./terraform/${{ matrix.environment }}/${{ matrix.layer }}
         run: |
           terraform init -input=false \
-            -backend-config="key=terraform/${{ matrix.environment }}/${{ matrix.layer }}/terraform.tfstate" \
+            -backend-config="key=terraform/${{ matrix.environment }}/${{ matrix.layer}}/terraform.tfstate" \
             -backend-config="bucket=${{ secrets.BUCKET }}" \
             -backend-config="access_key=${{ secrets.ACCESS_KEY }}" \
             -backend-config="secret_key=${{ secrets.SECRET_KEY }}"
-  
+
       - name: Terraform Validate
         run: terraform validate -no-color
 
@@ -49,6 +54,11 @@ jobs:
           retention-days: 7
 
       - name: Terraform Apply
+        if: github.event.pull_request.merged == true
         working-directory: ./terraform/${{ matrix.environment }}/${{ matrix.layer }}
         run: |
-          terraform apply -input=false -compact-warnings plan_${{ matrix.environment }}_${{ matrix.layer }}.file
+          terraform apply plan_${{ matrix.environment }}_${{ matrix.layer }}.file \
+            -var="key=terraform/${{ matrix.environment }}/foundation-00/terraform.tfstate" \
+            -var="bucket=${{ secrets.BUCKET }}" \
+            -var="access_key=${{ secrets.ACCESS_KEY }}" \
+            -var="secret_key=${{ secrets.SECRET_KEY }}
