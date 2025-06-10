@@ -24,10 +24,10 @@ jobs:
         continue-on-error: true
 
       - name: Terraform Init
-        working-directory: ./terraform/${{ github.environment }}/${{ matrix.layer }}
+        working-directory: ./terraform/${{ github.ref_name }}/${{ matrix.layer }}
         run: |
           terraform init -input=false \
-            -backend-config="key=terraform/${{ github.environment }}/${{ matrix.layer }}/terraform.tfstate" \
+            -backend-config="key=terraform/${{ github.ref_name }}/${{ matrix.layer }}/terraform.tfstate" \
             -backend-config="bucket=${{ secrets.BUCKET }}" \
             -backend-config="access_key=${{ secrets.ACCESS_KEY }}" \
             -backend-config="secret_key=${{ secrets.SECRET_KEY }}"
@@ -36,18 +36,18 @@ jobs:
         run: terraform validate -no-color
 
       - name: Terraform Plan
-        working-directory: ./terraform/${{ github.environment }}/${{ matrix.layer }}
+        working-directory: ./terraform/${{ github.ref_name }}/${{ matrix.layer }}
         run: |
-          terraform plan -input=false -compact-warnings -out=plan_${{ github.environment }}_${{ matrix.layer }}.file
+          terraform plan -input=false -compact-warnings -out=plan_${{ github.ref_name }}_${{ matrix.layer }}.file
       
       - name: Save Plan
         uses: actions/upload-artifact@v4
         with:
-          name: plan_${{ github.environment }}_${{ matrix.layer }}.file
-          path: terraform/${{ github.environment }}/${{ matrix.layer }}/plan_${{ github.environment }}_${{ matrix.layer }}.file
+          name: plan_${{ github.ref_name }}_${{ matrix.layer }}.file
+          path: terraform/${{ github.ref_name }}/${{ matrix.layer }}/plan_${{ github.ref_name }}_${{ matrix.layer }}.file
           retention-days: 7
 
       - name: Terraform Apply
-        working-directory: ./terraform/${{ github.environment }}/${{ matrix.layer }}
+        working-directory: ./terraform/${{ github.ref_name }}/${{ matrix.layer }}
         run: |
-          terraform apply -input=false -compact-warnings plan_${{ github.environment }}_${{ matrix.layer }}.file
+          terraform apply -input=false -compact-warnings plan_${{ github.ref_name }}_${{ matrix.layer }}.file
