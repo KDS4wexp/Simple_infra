@@ -6,31 +6,30 @@ on: workflow_dispatch
 env:
   TF_VAR_token: ${{ secrets.TOKEN }}
   TF_VAR_cloud: ${{ secrets.CLOUD }}
-  TF_VAR_folder: ${{ secrets.FOLDER }}
   TF_VAR_public_ssh_key: ${{ secrets.PUBLIC_SSH_KEY }}
   TF_VAR_domain: ${{ secrets.DOMAIN }}
   
 jobs:
   destroy:
     runs-on: ubuntu-latest
+    environment: ${{ github.event.pull_request.head.ref }}
     strategy:
       matrix:
         layer: [foundation-00]
-        environment: [simple_dev]
     steps:
       - uses: actions/checkout@v4
       - uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
-        working-directory: ./terraform/${{ matrix.environment }}/${{ matrix.layer }}
+        working-directory: ./terraform/${{ github.event.pull_request.head.ref }}/${{ matrix.layer }}
         run: |
           terraform init -input=false \
-            -backend-config="key=terraform/${{ matrix.environment }}/${{ matrix.layer }}/terraform.tfstate" \
+            -backend-config="key=terraform/${{ github.event.pull_request.head.ref }}/${{ matrix.layer }}/terraform.tfstate" \
             -backend-config="bucket=${{ secrets.BUCKET }}" \
             -backend-config="access_key=${{ secrets.ACCESS_KEY }}" \
             -backend-config="secret_key=${{ secrets.SECRET_KEY }}"
  
       - name: Terraform Destroy
-        working-directory: ./terraform/${{ matrix.environment }}/${{ matrix.layer }}
+        working-directory: ./terraform/${{ github.event.pull_request.head.ref }}/${{ matrix.layer }}
         run: |
           terraform destroy -auto-approve
