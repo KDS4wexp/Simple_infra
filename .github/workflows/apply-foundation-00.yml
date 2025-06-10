@@ -12,6 +12,8 @@ jobs:
   apply:
     runs-on: ubuntu-latest
     environment: ${{ github.ref_name }}
+    env:
+      TF_VAR_folder: ${{ secrets.FOLDER }}
     strategy:
       matrix:
         layer: [foundation-00]
