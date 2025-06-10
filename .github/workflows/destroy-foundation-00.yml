@@ -35,4 +35,4 @@ jobs:
       - name: Terraform Destroy
         working-directory: ./terraform/${{ github.ref_name }}/${{ matrix.layer }}
         run: |
-          terraform destroy -auto-approve
+          terraform destroy -input=false -compact-warnings -auto-approve
