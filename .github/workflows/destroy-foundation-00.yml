@@ -12,7 +12,7 @@ env:
 jobs:
   destroy:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.pull_request.head.ref }}
+    environment: ${{ github.ref_name }}
     strategy:
       matrix:
         layer: [foundation-00]
@@ -21,15 +21,15 @@ jobs:
       - uses: hashicorp/setup-terraform@v3
 
       - name: Terraform Init
-        working-directory: ./terraform/${{ github.event.pull_request.head.ref }}/${{ matrix.layer }}
+        working-directory: ./terraform/${{ github.environment }}/${{ matrix.layer }}
         run: |
           terraform init -input=false \
-            -backend-config="key=terraform/${{ github.event.pull_request.head.ref }}/${{ matrix.layer }}/terraform.tfstate" \
+            -backend-config="key=terraform/${{ github.environment }}/${{ matrix.layer }}/terraform.tfstate" \
             -backend-config="bucket=${{ secrets.BUCKET }}" \
             -backend-config="access_key=${{ secrets.ACCESS_KEY }}" \
             -backend-config="secret_key=${{ secrets.SECRET_KEY }}"
  
       - name: Terraform Destroy
-        working-directory: ./terraform/${{ github.event.pull_request.head.ref }}/${{ matrix.layer }}
+        working-directory: ./terraform/${{ github.environment }}/${{ matrix.layer }}
         run: |
           terraform destroy -auto-approve

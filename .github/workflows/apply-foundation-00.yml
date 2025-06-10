@@ -11,7 +11,7 @@ env:
 jobs:
   apply:
     runs-on: ubuntu-latest
-    environment: ${{ github.event.pull_request.head.ref }}
+    environment: ${{ github.ref_name }}
     strategy:
       matrix:
         layer: [foundation-00]
@@ -24,10 +24,10 @@ jobs:
         continue-on-error: true
 
       - name: Terraform Init
-        working-directory: ./terraform/${{ github.event.pull_request.head.ref }}/${{ matrix.layer }}
+        working-directory: ./terraform/${{ github.environment }}/${{ matrix.layer }}
         run: |
           terraform init -input=false \
-            -backend-config="key=terraform/${{ github.event.pull_request.head.ref }}/${{ matrix.layer }}/terraform.tfstate" \
+            -backend-config="key=terraform/${{ github.environment }}/${{ matrix.layer }}/terraform.tfstate" \
             -backend-config="bucket=${{ secrets.BUCKET }}" \
             -backend-config="access_key=${{ secrets.ACCESS_KEY }}" \
             -backend-config="secret_key=${{ secrets.SECRET_KEY }}"
@@ -36,18 +36,18 @@ jobs:
         run: terraform validate -no-color
 
       - name: Terraform Plan
-        working-directory: ./terraform/${{ github.event.pull_request.head.ref }}/${{ matrix.layer }}
+        working-directory: ./terraform/${{ github.environment }}/${{ matrix.layer }}
         run: |
-          terraform plan -input=false -compact-warnings -out=plan_${{ github.event.pull_request.head.ref }}_${{ matrix.layer }}.file
+          terraform plan -input=false -compact-warnings -out=plan_${{ github.environment }}_${{ matrix.layer }}.file
       
       - name: Save Plan
         uses: actions/upload-artifact@v4
         with:
-          name: plan_${{ github.event.pull_request.head.ref }}_${{ matrix.layer }}.file
-          path: terraform/${{ github.event.pull_request.head.ref }}/${{ matrix.layer }}/plan_${{ github.event.pull_request.head.ref }}_${{ matrix.layer }}.file
+          name: plan_${{ github.environment }}_${{ matrix.layer }}.file
+          path: terraform/${{ github.environment }}/${{ matrix.layer }}/plan_${{ github.environment }}_${{ matrix.layer }}.file
           retention-days: 7
 
       - name: Terraform Apply
-        working-directory: ./terraform/${{ github.event.pull_request.head.ref }}/${{ matrix.layer }}
+        working-directory: ./terraform/${{ github.environment }}/${{ matrix.layer }}
         run: |
-          terraform apply -input=false -compact-warnings plan_${{ github.event.pull_request.head.ref }}_${{ matrix.layer }}.file
+          terraform apply -input=false -compact-warnings plan_${{ github.environment }}_${{ matrix.layer }}.file
